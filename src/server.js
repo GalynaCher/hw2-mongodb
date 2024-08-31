@@ -37,7 +37,7 @@ const setupServer = () => {
 
     if (!contact) {
       res.status(404).json({
-        message: 'Contact not found',
+        message: 'Contact not found!',
       });
       return;
     }
@@ -72,7 +72,7 @@ const setupServer = () => {
   });
 
   app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}.`);
   });
 };
 
