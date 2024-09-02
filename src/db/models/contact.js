@@ -28,6 +28,8 @@ const contactsSchema = new Schema(
   {
     // Adding fields createdAt and updatedAt
     timestamps: true,
+    // Disable the creation of a document version field
+    versionKey: false,
   },
 );
 
