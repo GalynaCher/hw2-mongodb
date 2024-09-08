@@ -21,6 +21,7 @@ export const parseFilterParams = (query) => {
 
   const parsedContactType = parseContactType(contactType);
   const parsedIsFavourite = parseIsFavourite(isFavourite);
+  //   console.log('parseIsFavourite >> parsedIsFavourite:', parsedIsFavourite);
 
   return {
     contactType: parsedContactType,
