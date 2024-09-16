@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
 import pino from 'pino-http';
+import cookieParser from 'cookie-parser';
 import { envi } from './utils/env.js';
-import contactsRouter from './routers/contacts.js';
+// import contactsRouter from './routers/contacts.js';
+import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 
@@ -19,6 +21,7 @@ const setupServer = () => {
   app.use(express.json());
   // Middleware for CORS
   app.use(cors());
+  app.use(cookieParser());
 
   // GET to check server is running
   app.get('/', (req, res) => {
@@ -26,7 +29,8 @@ const setupServer = () => {
   });
 
   // Router middleware
-  app.use(contactsRouter);
+  // app.use(contactsRouter);
+  app.use(router);
 
   // Middleware for logging request time
   app.use((req, res, next) => {
