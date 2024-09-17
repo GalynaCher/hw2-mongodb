@@ -24,10 +24,7 @@ const contactsSchema = new Schema(
       enum: ['work', 'home', 'personal'],
       default: 'personal',
     },
-    userId: {
-      type: String,
-      required: true,
-    },
+    userId: { type: Schema.Types.ObjectId, ref: 'users' },
   },
   {
     // Adding fields createdAt and updatedAt
