@@ -32,7 +32,7 @@ router.get(
 
 // POST route - create new contact
 router.post(
-  '/register', //  /contacts
+  '/', //  /contacts
   validateBody(createContactsSchema),
   ctrlWrapper(createContactController),
 );
