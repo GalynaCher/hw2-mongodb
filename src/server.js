@@ -7,6 +7,7 @@ import { envi } from './utils/env.js';
 import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
+import { UPLOAD_DIR } from './constants/index.js';
 
 const PORT = Number(envi('PORT', '3000')); // const PORT = Number(process.env.PORT);
 
@@ -16,9 +17,10 @@ const setupServer = () => {
   // Middleware for logging
   app.use(pino({ transport: { target: 'pino-pretty' } }));
 
-  // Вбудований у express middleware для обробки (парсингу)
-  // JSON - даних у запитах наприклад, у запитах POST або PATCH
+  // Built-in express middleware for handling (parsing)
+  // JSON data in requests, for example, in POST or PATCH requests
   app.use(express.json());
+
   // Middleware for CORS
   app.use(cors());
   app.use(cookieParser());
@@ -31,6 +33,9 @@ const setupServer = () => {
   // Router middleware
   // app.use(contactsRouter);
   app.use(router);
+
+  // upload
+  app.use('/uploads', express.static(UPLOAD_DIR));
 
   // Middleware for logging request time
   app.use((req, res, next) => {

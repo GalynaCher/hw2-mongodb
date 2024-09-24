@@ -1,9 +1,14 @@
 import { ONE_DAY } from '../constants/index.js';
-import { registerUser } from '../services/auth.js';
-import { loginUser } from '../services/auth.js';
-import { logoutUser } from '../services/auth.js';
-import { refreshUsersSession } from '../services/auth.js';
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  resetPassword,
+  refreshUsersSession,
+  requestResetToken,
+} from '../services/auth.js';
 
+///////////////////// registerUserController /////////////////////
 export const registerUserController = async (req, res) => {
   const user = await registerUser(req.body);
 
@@ -14,6 +19,7 @@ export const registerUserController = async (req, res) => {
   });
 };
 
+///////////////////// loginUserController /////////////////////
 export const loginUserController = async (req, res) => {
   const session = await loginUser(req.body);
 
@@ -36,6 +42,7 @@ export const loginUserController = async (req, res) => {
   });
 };
 
+///////////////////// logoutUserController /////////////////////
 export const logoutUserController = async (req, res) => {
   if (req.cookies.sessionId) {
     await logoutUser(req.cookies.sessionId);
@@ -59,6 +66,7 @@ const setupSession = (res, session) => {
   });
 };
 
+///////////////////// refreshUserSessionController /////////////////////
 export const refreshUserSessionController = async (req, res) => {
   const session = await refreshUsersSession({
     sessionId: req.cookies.sessionId,
@@ -73,5 +81,27 @@ export const refreshUserSessionController = async (req, res) => {
     data: {
       accessToken: session.accessToken,
     },
+  });
+};
+
+///////////////////// requestResetEmailController /////////////////////
+export const requestResetEmailController = async (req, res) => {
+  await requestResetToken(req.body.email);
+
+  res.json({
+    status: 200,
+    message: 'Reset password email was successfully sent!',
+    data: {},
+  });
+};
+
+///////////////////// resetPasswordController /////////////////////
+export const resetPasswordController = async (req, res) => {
+  await resetPassword(req.body);
+
+  res.json({
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
   });
 };

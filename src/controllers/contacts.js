@@ -9,7 +9,11 @@ import {
 import { parsePaginationParams } from '../utils/parsePaginationParams.js';
 import { parseSortParams } from '../utils/parseSortParams.js';
 import { parseFilterParams } from '../utils/parseFilterParams.js';
+import { saveFileToUploadDir } from '../utils/saveFileToUploadDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { envi } from '../utils/env.js';
 
+/////////////////////////////// getContactsController ///////////////////////////////
 export const getContactsController = async (req, res) => {
   const { page, perPage } = parsePaginationParams(req.query);
   const { sortOrder, sortBy } = parseSortParams(req.query);
@@ -32,6 +36,7 @@ export const getContactsController = async (req, res) => {
   });
 };
 
+/////////////////////////////// getContactsController ///////////////////////////////
 export const getContactByIdController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
@@ -50,12 +55,25 @@ export const getContactByIdController = async (req, res, next) => {
   });
 };
 
+/////////////////////////////// createContactController ///////////////////////////////
 export const createContactController = async (req, res) => {
   const userId = req.user._id;
   const userBody = { ...req.body, userId };
   // console.log('createContactController >> { ...req.body, userId }', userBody);
+  const photo = req.file;
 
-  const contact = await createContact(userBody);
+  let photoUrl;
+
+  if (photo) {
+    if (envi('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+  console.log('createContactController >> photoUrl: ', photoUrl);
+
+  const contact = await createContact({ ...userBody, photo: photoUrl });
 
   res.status(201).json({
     status: 201,
@@ -64,6 +82,7 @@ export const createContactController = async (req, res) => {
   });
 };
 
+/////////////////////////////// deleteContactController ///////////////////////////////
 export const deleteContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
@@ -78,6 +97,7 @@ export const deleteContactController = async (req, res, next) => {
   res.status(204).send();
 };
 
+/////////////////////////////// upsertContactController ///////////////////////////////
 export const upsertContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
@@ -100,11 +120,26 @@ export const upsertContactController = async (req, res, next) => {
   });
 };
 
+/////////////////////////////// patchContactController ///////////////////////////////
 export const patchContactController = async (req, res, next) => {
   const { contactId } = req.params;
   const { _id: userId } = req.user;
+  const photo = req.file;
 
-  const result = await updateContact(contactId, userId, req.body);
+  let photoUrl;
+
+  if (photo) {
+    if (envi('ENABLE_CLOUDINARY') === 'true') {
+      photoUrl = await saveFileToCloudinary(photo);
+    } else {
+      photoUrl = await saveFileToUploadDir(photo);
+    }
+  }
+
+  const result = await updateContact(contactId, userId, {
+    ...req.body,
+    photo: photoUrl,
+  });
 
   if (!result) {
     next(createHttpError(404, 'Contact not found.'));
