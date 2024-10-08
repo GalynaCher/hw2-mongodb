@@ -8,6 +8,7 @@ import router from './routers/index.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { UPLOAD_DIR } from './constants/index.js';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 const PORT = Number(envi('PORT', '3000')); // const PORT = Number(process.env.PORT);
 
@@ -36,6 +37,8 @@ const setupServer = () => {
 
   // upload
   app.use('/uploads', express.static(UPLOAD_DIR));
+  // Middleware for swagger docs
+  app.use('/api-docs', swaggerDocs());
 
   // Middleware for logging request time
   app.use((req, res, next) => {
