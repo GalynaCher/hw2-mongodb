@@ -14,7 +14,7 @@
       "url": "http://localhost:3000"
     },
     {
-      "url": "http://localhost:3000"
+      "url": "https://hw7-swagger-oc8f.onrender.com/"
     }
   ],
   "tags": [
@@ -115,11 +115,6 @@
                     "description": "Whether is contact favorite",
                     "type": "boolean",
                     "example": false
-                  },
-                  "userId": {
-                    "description": "Contact's user id",
-                    "type": "string",
-                    "example": "66e838d83a4d67ee94ce96a8"
                   },
                   "photo": {
                     "description": "Contact's photo",
@@ -424,11 +419,6 @@
                     "description": "Whether is contact favorite",
                     "type": "boolean",
                     "example": false
-                  },
-                  "userId": {
-                    "description": "Contact's user id",
-                    "type": "string",
-                    "example": "65e4decdd286b30065d54af9"
                   },
                   "photo": {
                     "description": "Contact's photo",
